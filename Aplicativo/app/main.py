@@ -1,24 +1,26 @@
 #Necessario instalar:
 #pip install streamlit pandas xlsxwriter openpyxl numpy
+
 import sys
 import os
-
-# Pega o caminho absoluto da pasta onde o main.py está ('app')
-diretorio_app = os.path.dirname(os.path.abspath(__file__))
-
-# Pega o caminho da pasta pai ('Codigos')
-diretorio_raiz = os.path.dirname(diretorio_app)
-
-# Adiciona 'Codigos' ao caminho de busca do Python
-if diretorio_raiz not in sys.path:
-    sys.path.append(diretorio_raiz)
-
 import streamlit as st
 import pandas as pd
 import io
 import numpy as np
 import joblib
+
+#Para permitir chegar no arquivo UTILS.PY
+# Pega o caminho absoluto da pasta onde o main.py está ('app')
+diretorio_app = os.path.dirname(os.path.abspath(__file__))
+# Pega o caminho da pasta pai ('Aplicativo')
+diretorio_raiz = os.path.dirname(diretorio_app)
+# Adiciona 'Aplicativo' ao caminho de busca do Python
+if diretorio_raiz not in sys.path:
+    sys.path.append(diretorio_raiz)
+
+#após ajustes nos caminhos importamos o Utils:
 from tools.utils import FeatureSelector,substituir_valores_coluna, remover_texto_parenteses, normalizar_fase
+
 
 def realizar_predicao(df):
     """Processa os dados e aplica o modelo de Machine Learning."""
@@ -39,11 +41,13 @@ def realizar_predicao(df):
     base_filtrado = df[df['pedra'].isna() | (df['pedra'].astype(str).str.strip() == '') | (df['pedra'].astype(str).str.strip() == 'INCLUIR')]
     df = df.drop(index=base_filtrado.index)
 
+    #Mesmas colunas utilizadas na predição do ML:
     features_do_modelo = [
         'inde', 'ieg', 'iaa', 'ips', 'ida', 'ian', 
         'idade', 'ipv', 'defasagem', 'fase', 'fase_ideal'
     ]
 
+    #Limpando linhas nulas
     df[features_do_modelo] = df[features_do_modelo].replace(r'^\s*$', np.nan, regex=True)
     df = df.dropna(subset=features_do_modelo)
     
@@ -52,14 +56,15 @@ def realizar_predicao(df):
     # Carregamento do modelo (ajuste o caminho se necessário)
     caminho_modelo = os.path.join(os.path.dirname(__file__), '../tools/Defasagem.joblib')
     modelo = joblib.load(caminho_modelo)
-    
+
+    #Aplicando o modelo
     df['predicao_grupo'] = modelo.predict(df[features_do_modelo])
     
     return df
 
 # --- Interface Streamlit ---
-st.set_page_config(page_title="Sistema de Predição", layout="wide")
-st.title("📊 Aplicação de Predição de Dados")
+st.set_page_config(page_title="Sistema de Predição - Passos Mágicos", layout="wide")
+st.title("📊 Aplicação de Predição para identificar possivel defasagem")
 
 arquivo_carregado = st.file_uploader("Carregue seu arquivo", type=["xlsx", "xls", "csv"])
 
