@@ -88,7 +88,8 @@ elif pagina == "Download do Modelo":
     st.download_button("📥 Baixar Modelo Excel (.xlsx)", data=template, file_name="template_ra_passos_magicos.xlsx")
 
 elif pagina == "Predição via Arquivo":
-    st.title("📊 Predição em Lote (com RA)")
+
+    st.title("📊 Predição em Lote")
     arquivo = st.file_uploader("Suba o arquivo preenchido", type=["xlsx", "csv"])
     if arquivo:
         df_input = pd.read_csv(arquivo) if arquivo.name.endswith('.csv') else pd.read_excel(arquivo)
@@ -97,10 +98,13 @@ elif pagina == "Predição via Arquivo":
             # Validação simples de colunas
             colunas_faltantes = set(FEATURES_DO_MODELO) - set(df_input.columns)
             if colunas_faltantes:
-                st.error(f"O arquivo enviado está faltando as seguintes colunas obrigatórias: {', '.join(colunas_faltantes)}")
+                st.error(f"O arquivo enviado está faltando as seguintes colunas obrigatórias: **{', '.join(colunas_faltantes)}**")
+                # st.info(f"Por favor, carregue um arquivo válido! (Se necessário faça o download do Modelo para verificar as colunas)")
+                st.write(f"Por favor, carregue um arquivo válido! (Se necessário faça o download do Modelo para verificar as colunas)")
+                template = gerar_template_excel()
+                st.download_button("📥 Baixar Modelo Excel (.xlsx)", data=template, file_name="template_ra_passos_magicos.xlsx")
             
             else:
-
                 try:
                     res = realizar_predicao(df_input)
                     st.success("Análise concluída!")
