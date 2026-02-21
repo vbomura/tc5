@@ -1,8 +1,10 @@
 # 📊 Tech Challenge – Fase 5 (Datathon)
 
-## Dashboard e Previsão de Obesidade com Machine Learning
+## Identificação de Risco sobre desempenho de alunos
 
-Este projeto foi desenvolvido como parte do **Tech Challenge da FIAP – Fase 4**, com foco em criar uma aplicação completa de **Machine Learning**, incluindo análise exploratória, pré-processamento, construção de modelos e interface interativa com **Streamlit**.
+Este projeto foi desenvolvido como parte do **Datathon da FIAP – Fase 5**, com foco em criar uma aplicação para predição para identificar alunos em risco antes de queda no desempenho ou aumento da defasagemos alunos.
+
+Utilizamos o **Machine Learning**, para criar as previsões além de analisarmos e respondermos algumas perguntas. A interface para a análise dos alunos está interativa em **Streamlit**.
 
 A aplicação está publicada e acessível pelo link:
 
@@ -76,10 +78,11 @@ tc5/
 │   ├── Defasagem.joblib
 │   └── utils.py
 │
-│── modules/                    # Lógica das páginas do Streamlit
-│   ├── dashboard.py            # Insights levantados na analise dos dados
-│   ├── imagem.py               # Informações sobre a predição utilizada
-│   ├── pesquisa.py             # Tela para preenchimento de informações e utilização da predição
+│── Respostas_Pesquisa/         # Análises e identificação das respostas do desafio do Datathon
+│   ├── Questoes_1_2.ipynb      # Tratamentos e análises para responder as questões 1 e 2 
+│   ├── Questoes_3_4.ipynb      # Tratamentos e análises para responder as questões 3 e 4
+│   ├── Questoes_5_6.ipynb      # Tratamentos e análises para responder as questões 5 e 6
+│   ├── Questoes_7_8_10.ipynb   # Tratamentos e análises para responder as questões 7, 8 e 10
 │
 │── main.py                     # Arquivo principal da aplicação Streamlit/Boas Vindas
 │── requirements.txt            # Dependências do projeto
