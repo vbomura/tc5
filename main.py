@@ -93,24 +93,32 @@ elif pagina == "Predição via Arquivo":
     if arquivo:
         df_input = pd.read_csv(arquivo) if arquivo.name.endswith('.csv') else pd.read_excel(arquivo)
         if st.button("Analisar Alunos"):
-            try:
-                res = realizar_predicao(df_input)
-                st.success("Análise concluída!")
-                st.dataframe(res)
-                # Download do Resultado
-                buffer = io.BytesIO()
-                with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-                    res.to_excel(writer, index=False)
-                
-                st.download_button(
-                    label="📥 Baixar Resultado Completo (.xlsx)",
-                    data=buffer.getvalue(),
-                    file_name="resultado_defasagem_passos_magicos.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
 
-            except Exception as e:
-                st.error(f"Erro: Verifique se todas as colunas obrigatórias (incluindo o RA) estão presentes.")
+            # Validação simples de colunas
+            colunas_faltantes = set(FEATURES_DO_MODELO) - set(df_input.columns)
+            if colunas_faltantes:
+                st.error(f"O arquivo enviado está faltando as seguintes colunas obrigatórias: {', '.join(colunas_faltantes)}")
+            
+            else:
+
+                try:
+                    res = realizar_predicao(df_input)
+                    st.success("Análise concluída!")
+                    st.dataframe(res)
+                    # Download do Resultado
+                    buffer = io.BytesIO()
+                    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+                        res.to_excel(writer, index=False)
+                    
+                    st.download_button(
+                        label="📥 Baixar Resultado Completo (.xlsx)",
+                        data=buffer.getvalue(),
+                        file_name="resultado_defasagem_passos_magicos.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+
+                except Exception as e:
+                    st.error(f"Ocorreu um erro ao tentar realizar a análise do arquivo.")
 
 elif pagina == "Predição Individual":
     st.title("📝 Simulação por Aluno")
@@ -146,13 +154,20 @@ elif pagina == "Predição Individual":
             dados = pd.DataFrame([{
                 'ra': ra, 'inde': inde, 'ieg': ieg, 'iaa': iaa, 'ips': ips, 'ida': ida,
                 'ian': ian, 'idade': idade, 'ipv': ipv, 'defasagem': defasagem,
-                'fase': fase, 'fase_ideal': fase_ideal, 'pedra': 'INCLUIR'
+                'fase': fase, 'fase_ideal': fase_ideal
             }])
+
+            #Visualizar dados preenchidos em formato de tabela:
+            #st.dataframe(dados)
+
             resultado = realizar_predicao(dados)
             pred = resultado['predicao_defasagem_aluno'].values[0]
             
             st.subheader(f"Resultado para o RA: {ra}")
-            if pred == 1:
+
+            if pred != 0:
+                st.warning(f"Retorno da Predição: {pred}")
                 st.error("🚨 Probabilidade de Defasagem detectada.")
             else:
+                st.info(f"Retorno da Predição: {pred}")
                 st.success("✅ O aluno apresenta desempenho condizente com sua fase.")
