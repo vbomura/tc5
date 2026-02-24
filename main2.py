@@ -7,6 +7,7 @@ import joblib
 import os
 from tools.utils import FeatureSelector, substituir_valores_coluna, remover_texto_parenteses, normalizar_fase
 import base64
+import streamlit.components.v1 as components
 
 # --- Configurações Globais ---
 FEATURES_DO_MODELO = [
@@ -63,11 +64,11 @@ st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout=
 st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
 # Criando as Abas
-tab_home, tab_lote, tab_individual = st.tabs([
+tab_home, tab_lote, tab_individual, tab_resposta = st.tabs([
     "🏠 Página Inicial", 
-    #"📄 Download do Modelo", 
     "📊 Análise em Lote", 
-    "📝 Análise por Aluno"
+    "📝 Análise por Aluno",
+    "🎈 Respostas Datathon"
 ])
 
 
@@ -91,6 +92,7 @@ with tab_home:
                 ### O que você encontrará aqui?                
                 - 📊 Análise dos alunos em lote (excel);
                 - 📝 Análise do alunos Individualmente;
+                - 🎈 Respostas Perguntas Datathon; 
                 - ℹ️ Informações do repositório principal (https://github.com/vbomura/tc5);
                                                 
                 ### 👨‍💻 Autores
@@ -102,6 +104,10 @@ with tab_home:
                 """)
 
     st.info("Navegue pelas abas acima para maiores informações.")
+
+with tab_resposta:
+    st.title('🎈 Apresentação Datathoon ')
+    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRZ9jUjldu2w7S-hEmSvFxHG-_e8a7r48GtidsWKsSBwBJk4a3yeIpFIcTGKUBNeUZOmLvmu_Ai-iBD/pubembed?start=false&loop=false&delayms=3000", height=480)
 
 # # --- ABA: DOWNLOAD ---
 # with tab_download:
