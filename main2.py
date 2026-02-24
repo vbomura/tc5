@@ -60,7 +60,7 @@ def criar_link_download(dados_binarios, nome_arquivo, texto_link):
 # --- Interface Streamlit ---
 st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
 
-st.title("🚀 Projeto Datathon: Passos Mágicos - Defasagem Alunos")
+st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
 # Criando as Abas
 tab_home, tab_lote, tab_individual = st.tabs([
@@ -70,23 +70,28 @@ tab_home, tab_lote, tab_individual = st.tabs([
     "📝 Análise por Aluno"
 ])
 
+
+# Utilizamos as informações fornecidas no Datathon da **Fase 5 - Data Analytics (FIAP - 9DTAT)**.
 # --- ABA: PÁGINA INICIAL ---
 with tab_home:
     st.markdown("""
-                ## Bem-vindo ao Sistema de Identificação de Defasagem Acadêmica
+                ## Projeto Datathon (FIAP): Passos Mágicos
 
-                Este sistema foi desenvolvido para realizar previsões relacionadas a provaveis defasagem nos alunos da Passos Mágisos. 
+                Com base no histórico de desenvolvimento educacional da **Associação Passos Mágicos** dos anos de 2022, 2023 e 2024.
+                Conduzimos uma profunda análise de dados para compreender a evolução dos alunos, além de compreender o passado e o presente. 
                 
-                Utilizamos as informações fornecidas no Datathon da **Fase 5 - Data Analytics (FIAP - 9DTAT)**.
+                Criamos uma analise preditiva em Machine Learning para antecipar o futuro.
 
+                Com objetivo central desta solução de identificar padrões nos indicadores que permitem alertar sobre alunos em risco antes que ocorra uma queda no desempenho ou o aumento da defasagem. 
+                
+                O modelo calcula e demonstra a probabilidade de aluno(s) ou aluna(s) entrar em risco de defasagem acadêmica, o mesmo foi integrado a uma aplicação interativa construída no Streamlit. 
+                
+                Essa interface intuitiva disponibiliza o modelo treinado diretamente para as equipes da Passos Mágicos, permitindo intervenções pedagógicas e psicológicas precoces e direcionadas, garantindo que nenhum aluno fique para trás.
+                           
                 ### O que você encontrará aqui?                
                 - 📊 Análise dos alunos em lote (excel);
                 - 📝 Análise do alunos Individualmente;
-                - ℹ️ Informações sobre o modelo de Machine Learning; **----->>>>>>>>????????????**
-                - ℹ️ Informações sobre analise e estudos realizados; **----->>>>>>>>????????????**
                 - ℹ️ Informações do repositório principal (https://github.com/vbomura/tc5);
-
-                O objetivo é fornecer para a empresa **Passos Mágicos** uma forma de conseguir identificar alunos em risco antes de queda no desempenho ou aumento da defasagem, por meio de uma predição criada.
                                                 
                 ### 👨‍💻 Autores
                 - Bryan (https://github.com/BryanTieteTanoue)
