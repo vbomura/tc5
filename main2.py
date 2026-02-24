@@ -106,8 +106,8 @@ with tab_home:
     st.info("Navegue pelas abas acima para maiores informações.")
 
 with tab_resposta:
-    st.title('🎈 Apresentação Datathoon ')
-    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRZ9jUjldu2w7S-hEmSvFxHG-_e8a7r48GtidsWKsSBwBJk4a3yeIpFIcTGKUBNeUZOmLvmu_Ai-iBD/pubembed?start=false&loop=false&delayms=3000", height=480)
+    # st.title('🎈 Apresentação Datathoon ')
+    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRZ9jUjldu2w7S-hEmSvFxHG-_e8a7r48GtidsWKsSBwBJk4a3yeIpFIcTGKUBNeUZOmLvmu_Ai-iBD/pubembed?start=false&loop=false&delayms=3000", height=560)
 
 # # --- ABA: DOWNLOAD ---
 # with tab_download:
