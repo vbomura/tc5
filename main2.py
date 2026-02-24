@@ -59,7 +59,52 @@ def criar_link_download(dados_binarios, nome_arquivo, texto_link):
     return href
 
 # --- Interface Streamlit ---
+# st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
+# st.title("🚀 Modelo Preditivo de Risco Educacional ")
+
+# --- Interface Streamlit ---
 st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
+
+# --- CSS CUSTOMIZADO ---
+st.markdown("""
+<style>
+    /* 1. Reduzir o espaço em branco no topo da página */
+    .block-container {
+        padding-top: 2rem !important; /* Ajuste este valor se quiser mais ou menos espaço (padrão é ~6rem) */
+        padding-bottom: 2rem !important;
+    }
+
+    /* 2. Espaçamento entre as abas */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+    }
+
+    /* 3. Estilo padrão (desativado) de todas as abas */
+    .stTabs [data-baseweb="tab"] {
+        background-color: #F0F2F6; 
+        border-radius: 8px 8px 0px 0px; 
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #555555;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 4. Estilo ao passar o mouse (Hover) */
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #E0E2E6;
+        color: #ff4b4b; 
+    }
+
+    /* 5. Estilo da aba SELECIONADA (Ativa) */
+    .stTabs [aria-selected="true"] {
+        background-color: #ff4b4b !important; 
+        color: white !important; 
+        border: none !important;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
 
 st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
