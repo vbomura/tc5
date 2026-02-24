@@ -106,6 +106,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
 st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
 # Criando as Abas
