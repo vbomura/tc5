@@ -1,6 +1,4 @@
-#Necessario instalar:
-#pip install streamlit pandas xlsxwriter openpyxl numpy
-
+# Verificar arquivo -> requirements.txt
 import streamlit as st
 import pandas as pd
 import io
@@ -8,37 +6,49 @@ import numpy as np
 import joblib
 import os
 from tools.utils import FeatureSelector, substituir_valores_coluna, remover_texto_parenteses, normalizar_fase
+import base64
+import streamlit.components.v1 as components
 
-# --- Configurações Globais ---
-# RA incluído para identificação, mas será separado das features numéricas no modelo
+# --- Configurações Globais das Features utilizadas no ML (previsao_v2.ipynb) ---
 FEATURES_DO_MODELO = [
-    'ra', 'inde', 'ieg', 'iaa', 'ips', 'ida', 'ian', 
-    'idade', 'ipv', 'defasagem', 'fase', 'fase_ideal'
-]
+            # 'ra',
+            # 'genero', 
+            # 'inde', 
+            # 'iaa', 
+            # 'ieg', 
+            # 'ips', 
+            'ida', 
+            # 'mat', 
+            # 'por', 
+            'ipv', 
+            # 'ian', 
+            'defasagem',
+            # 'ipp',
+            # 'instituicao_de_ensino', 
+            # 'pedra', 
+            'fase'
+            ]
 
-# Apenas as colunas que o modelo realmente espera (numéricas/processadas)
 FEATURES_PARA_PREDICAO = [f for f in FEATURES_DO_MODELO if f != 'ra']
 
 @st.cache_resource
 def carregar_modelo():
-    caminho = os.path.join(os.path.dirname(__file__), 'tools/Defasagem.joblib')
+    caminho = os.path.join(os.path.dirname(__file__), 'tools/DefasagemNew.joblib')
     return joblib.load(caminho)
 
 def gerar_template_excel():
     output = io.BytesIO()
-    # Template agora inclui o RA como primeira coluna
-    df_template = pd.DataFrame(columns=FEATURES_DO_MODELO + ['pedra'])
+    df_template = pd.DataFrame(columns=FEATURES_DO_MODELO)
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         df_template.to_excel(writer, index=False)
     return output.getvalue()
 
-def realizar_predicao(df):
+def realizar_predicao(df,tipo = 1):
     df = df.copy()
     modelo = carregar_modelo()
     
-    # Tratamentos de texto/fase
     df["fase"] = df["fase"].map(normalizar_fase)   
-    df["fase_ideal"] = df["fase_ideal"].map(remover_texto_parenteses)
+    # df["fase_ideal"] = df["fase_ideal"].map(remover_texto_parenteses)
     
     mapeamento_defasagem = {
         'ALFA': 0, 'FASE 1': 1, 'FASE 2': 2, 'FASE 3': 3,
@@ -46,70 +56,141 @@ def realizar_predicao(df):
     }
     df = substituir_valores_coluna(df=df, coluna='fase', mapeamento=mapeamento_defasagem)
 
-    # Limpeza baseada na coluna 'pedra' (se existir)
-    if 'pedra' in df.columns:
-        base_filtrado = df[df['pedra'].isna() | (df['pedra'].astype(str).str.strip() == '') | (df['pedra'].astype(str).str.strip() == 'INCLUIR')]
-        df = df.drop(index=base_filtrado.index)
-
-    # Limpeza de nulos apenas nas colunas de cálculo (ignorando RA para não perder o ID se estiver nulo)
     df[FEATURES_PARA_PREDICAO] = df[FEATURES_PARA_PREDICAO].replace(r'^\s*$', np.nan, regex=True)
     df = df.dropna(subset=FEATURES_PARA_PREDICAO)
 
-    st.info(f"Linhas restantes após limpeza: {len(df)}")
-    
-    # Predição usando apenas as features numéricas
+    if tipo == 1:
+        #Informando quantas linhas ficaram apos as remoções de linhas inválidas
+        st.warning(f"Linhas restantes após exclusão de linhas inválidas (nulas): {len(df)}")
+
     df['predicao_defasagem_aluno'] = modelo.predict(df[FEATURES_PARA_PREDICAO])
     
-    # Reorganizar colunas para o RA aparecer primeiro no resultado
     cols = ['ra'] + [c for c in df.columns if c != 'ra']
     return df[cols]
 
+def criar_link_download(dados_binarios, nome_arquivo, texto_link):
+    b64 = base64.b64encode(dados_binarios).decode()
+    href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="{nome_arquivo}">{texto_link}</a>'
+    return href
+
 # --- Interface Streamlit ---
-st.set_page_config(page_title="Passos Mágicos - Datathon FIAP", layout="wide")
+# st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
+# st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
-st.sidebar.title("📌 Navegação")
-pagina = st.sidebar.selectbox("Selecione uma opção:", 
-    ["Página Inicial", "Download do Modelo", "Predição via Arquivo", "Predição Individual"])
+# --- Interface Streamlit ---
+st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
 
-if pagina == "Página Inicial":
-    st.title("🚀 Projeto Datathon: Passos Mágicos & FIAP")
+# --- CSS CUSTOMIZADO ---
+st.markdown("""
+<style>
+    /* 1. Reduzir o espaço em branco no topo da página */
+    .block-container {
+        padding-top: 2rem !important; /* Ajuste este valor se quiser mais ou menos espaço (padrão é ~6rem) */
+        padding-bottom: 2rem !important;
+    }
+
+    /* 2. Espaçamento entre as abas */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+    }
+
+    /* 3. Estilo padrão (desativado) de todas as abas */
+    .stTabs [data-baseweb="tab"] {
+        background-color: #F0F2F6; 
+        border-radius: 8px 8px 0px 0px; 
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #555555;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 4. Estilo ao passar o mouse (Hover) */
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #E0E2E6;
+        color: #ff4b4b; 
+    }
+
+    /* 5. Estilo da aba SELECIONADA (Ativa) */
+    .stTabs [aria-selected="true"] {
+        background-color: #ff4b4b !important; 
+        color: white !important; 
+        border: none !important;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+st.title("🚀 Modelo Preditivo de Risco Educacional ")
+
+# Criando as Abas
+tab_home, tab_lote, tab_individual, tab_resposta = st.tabs([
+    "🏠 Página Inicial", 
+    "📊 Análise em Lote", 
+    "📝 Análise por Aluno",
+    "🎈 Respostas Datathon"
+])
+
+
+# Utilizamos as informações fornecidas no Datathon da **Fase 5 - Data Analytics (FIAP - 9DTAT)**.
+# --- ABA: PÁGINA INICIAL ---
+with tab_home:
     st.markdown("""
-    ### Identificação de Defasagem Acadêmica
-    O modelo analisa indicadores do aluno para prever possíveis atrasos no aprendizado.
+                ## Projeto Datathon (FIAP): Passos Mágicos
+
+                Com base no histórico de desenvolvimento educacional da **Associação Passos Mágicos** dos anos de 2022, 2023 e 2024, conduzimos uma profunda análise de dados para compreender a evolução dos alunos, além de compreender o passado e o presente para criar uma análise preditiva em Machine Learning. 
+                O objetivo central desta solução é identificar padrões nos indicadores que permitem alertar sobre alunos em risco antes que ocorra uma queda no desempenho ou o aumento da defasagem. 
+                
+                O modelo calcula e demonstra a probabilidade de alunos entrarem em risco de defasagem acadêmica, o mesmo foi integrado a página que está visualizando (Streamlit).                 
+                Essa interface intuitiva disponibiliza o modelo treinado diretamente para as equipes da Passos Mágicos, permitindo intervenções pedagógicas e psicológicas com antecedencias e direcionadas, garantindo que nenhum aluno fique para trás.
+                           
+                ### O que você encontrará aqui?                
+                - 📊 Análise dos alunos em lote (excel);
+                - 📝 Análise do alunos Individualmente;
+                - 🎈 Respostas Perguntas Datathon; 
+                - ℹ️ Informações do repositório principal (https://github.com/vbomura/tc5);
+                                                
+                ### 👨‍💻 Autores
+                - Bryan (https://github.com/BryanTieteTanoue)
+                - Gustavo (https://github.com/Nadaguty)
+                - Luiz (https://github.com/LFAJOGA5)
+                - Pedro (https://github.com/PedroBaradel)
+                - Vitor (https://github.com/vbomura)                
+                """)
+
+    st.info("Navegue pelas abas acima para maiores informações.")
+
+with tab_resposta:
+    # st.title('🎈 Apresentação Datathoon ')
+    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRZ9jUjldu2w7S-hEmSvFxHG-_e8a7r48GtidsWKsSBwBJk4a3yeIpFIcTGKUBNeUZOmLvmu_Ai-iBD/pubembed?start=false&loop=false&delayms=3000", height=560)
+
+# --- ABA: PREDIÇÃO EM LOTE ---
+with tab_lote:
+    st.header("📊 Análise em Lote")
     
-    **Nova Funcionalidade:** Agora o sistema utiliza o **RA (Registro do Aluno)** para garantir que os resultados sejam facilmente vinculados ao cadastro da instituição.
-    """)
-    st.info("Utilize o menu lateral para navegar entre as ferramentas de predição.")
-
-elif pagina == "Download do Modelo":
-    st.title("📄 Download do Template")
-    st.write("Baixe o arquivo e preencha o RA e os indicadores de cada aluno.")
+    # Criando o link formatado para download do modelo:
     template = gerar_template_excel()
-    st.download_button("📥 Baixar Modelo Excel (.xlsx)", data=template, file_name="template_ra_passos_magicos.xlsx")
+    link_html = criar_link_download(template, "modelo_passos_magicos.xlsx", "Clique aqui para baixar o modelo")    
+    st.markdown(f"Suba o arquivo preenchido ou baixe o arquivo modelo e preencha as linhas com as informações dos alunos utilizamos as colunas de IDA, IPV, Defasagem e Fase para realizar a predição ({link_html}).", unsafe_allow_html=True)
 
-elif pagina == "Predição via Arquivo":
-
-    st.title("📊 Predição em Lote")
-    arquivo = st.file_uploader("Suba o arquivo preenchido", type=["xlsx", "csv"])
+    #Upload do aruqivo
+    arquivo = st.file_uploader("", type=["xlsx", "csv"], key="uploader_lote")
+    
     if arquivo:
         df_input = pd.read_csv(arquivo) if arquivo.name.endswith('.csv') else pd.read_excel(arquivo)
         if st.button("Analisar Alunos"):
-
-            # Validação simples de colunas
             colunas_faltantes = set(FEATURES_DO_MODELO) - set(df_input.columns)
             if colunas_faltantes:
                 st.error(f"O arquivo enviado está faltando as seguintes colunas obrigatórias: **{', '.join(colunas_faltantes)}**")
-                # st.info(f"Por favor, carregue um arquivo válido! (Se necessário faça o download do Modelo para verificar as colunas)")
-                st.write(f"Por favor, carregue um arquivo válido! (Se necessário faça o download do Modelo para verificar as colunas)")
-                template = gerar_template_excel()
-                st.download_button("📥 Baixar Modelo Excel (.xlsx)", data=template, file_name="template_ra_passos_magicos.xlsx")
-            
+                # st.write(f"Por favor, carregue um arquivo válido!")
+                link_html = criar_link_download(template, "modelo_passos_magicos.xlsx", "Clique aqui para baixar o modelo")    
+                st.write(f"Por favor, carregue um arquivo válido! ({link_html}).", unsafe_allow_html=True)                
             else:
                 try:
-                    res = realizar_predicao(df_input)
+                    res = realizar_predicao(df_input,1)
                     st.success("Análise concluída!")
-                    st.dataframe(res)
-                    # Download do Resultado
+                    #Opção de download da analise
                     buffer = io.BytesIO()
                     with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
                         res.to_excel(writer, index=False)
@@ -121,54 +202,49 @@ elif pagina == "Predição via Arquivo":
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
 
+                    st.dataframe(res)                
                 except Exception as e:
-                    st.error(f"Ocorreu um erro ao tentar realizar a análise do arquivo.")
+                    st.error(f"Erro ao processar arquivo: {e}")
 
-elif pagina == "Predição Individual":
-    st.title("📝 Simulação por Aluno")
+# --- ABA: PREDIÇÃO INDIVIDUAL ---
+with tab_individual:
+    st.header("📝 Predição por Aluno")
     
     with st.form("form_aluno"):
-        ra = st.text_input("RA do Aluno", placeholder="Ex: PM-2026-001")
-        col1, col2 = st.columns(2)
-        with col1:
-            # Definindo mínimo de 0.0 e máximo de 10.0 para os índices
-            inde = st.number_input("INDE", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            ieg = st.number_input("IEG (Engajamento)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            iaa = st.number_input("IAA (Autoavaliação)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            ips = st.number_input("IPS (Social)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            ida = st.number_input("IDA (Aprendizado)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+        ra = st.text_input("RA do Aluno", placeholder="Ex: RA-987654")
+        ida = st.number_input("IDA (Aprendizado)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+        ipv = st.number_input("IPV (Ponto de Virada)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+        defasagem = st.number_input("Defasagem", min_value=-5.0, max_value=5.0, value=0.0, step=1.0)
+        fase = st.selectbox("Fase Atual", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)], key="fase_ind")
 
-        with col2:
-            ian = st.number_input("IAN (Nível)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            
-            # Para idade, podemos definir um intervalo realista (ex: 6 a 20 anos)
-            idade = st.number_input("Idade", min_value=0, max_value=25, value=10, step=1)
-            
-            ipv = st.number_input("IPV (Ponto de Virada)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            
-            # Defasagem costuma ser um valor calculado, ajuste conforme sua regra de negócio
-            defasagem = st.number_input("Defasagem", min_value=-5.0, max_value=5.0, value=0.0, step=1.0)
-            
-            fase = st.selectbox("Fase Atual", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)])
-            fase_ideal = st.selectbox("Fase", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)])
+        # col1, col2 = st.columns(2)
+        # with col1:
+        #     ida = st.number_input("IDA (Aprendizado)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+        #     ipv = st.number_input("IPV (Ponto de Virada)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+        #     defasagem = st.number_input("Defasagem", min_value=-5.0, max_value=5.0, value=0.0, step=1.0)
+        #     fase = st.selectbox("Fase Atual", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)], key="fase_ind")
+
+        # with col2:
+            # ian = st.number_input("IAN (Nível)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+            # idade = st.number_input("Idade", min_value=0, max_value=25, value=10, step=1)
+            # inde = st.number_input("INDE", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+            # ieg = st.number_input("IEG (Engajamento)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+            # iaa = st.number_input("IAA (Autoavaliação)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+            # ips = st.number_input("IPS (Social)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)            
+            # fase_ideal = st.selectbox("Fase Ideal", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)], key="fase_ideal_ind")
             
         enviado = st.form_submit_button("Verificar Aluno")
         
         if enviado:
             dados = pd.DataFrame([{
-                'ra': ra, 'inde': inde, 'ieg': ieg, 'iaa': iaa, 'ips': ips, 'ida': ida,
-                'ian': ian, 'idade': idade, 'ipv': ipv, 'defasagem': defasagem,
-                'fase': fase, 'fase_ideal': fase_ideal
+                'ra': ra, 'ida': ida, 'ipv': ipv, 'defasagem': defasagem,
+                'fase': fase
             }])
 
-            #Visualizar dados preenchidos em formato de tabela:
-            #st.dataframe(dados)
-
-            resultado = realizar_predicao(dados)
+            resultado = realizar_predicao(dados,0)
             pred = resultado['predicao_defasagem_aluno'].values[0]
             
             st.subheader(f"Resultado para o RA: {ra}")
-
             if pred != 0:
                 st.warning(f"Retorno da Predição: {pred}")
                 st.error("🚨 Probabilidade de Defasagem detectada.")
