@@ -66,7 +66,7 @@ def criar_link_download(dados_binarios, nome_arquivo, texto_link):
 # --- Interface Streamlit ---
 st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
 
-# --- CSS CUSTOMIZADO ---
+# --- CSS ---
 st.markdown("""
 <style>
     /* 1. Reduzir o espaço em branco no topo da página */
@@ -146,7 +146,7 @@ with tab_home:
     st.info("Navegue pelas abas acima para maiores informações.")
 
 with tab_resposta:
-    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRv4pIpW193lXDhwRmyiJj1EXi-1rXMzgu_Q9F-CHBkHtb4zGpIxjjmHcdYOjpIBQ/pubembed?start=false&loop=false&delayms=3000", height=560)
+    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vQPfRKC71lzFbLlDdOkGSmPrFFIyHuauwmpm88f_K01yq0-uObYvNn_7dmbe25E3A/pubembed?start=false&loop=false&delayms=3000", height=560)
 
 # --- ABA: PREDIÇÃO EM LOTE ---
 with tab_lote:
