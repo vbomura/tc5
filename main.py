@@ -28,9 +28,17 @@ def carregar_modelo():
 
 def gerar_template_excel():
     output = io.BytesIO()
-    df_template = pd.DataFrame(columns=FEATURES_DO_MODELO)
+    # Exemplo supondo de informações
+    linhas_exemplo = [
+        ['RA-9999', 4, 7.28, 0, 'Fase 7'],   # Dados da Linha de Exemplo 1
+        ['RA-8888', 5, 5.72, -1, 'ALFA']     # Dados da Linha de Exemplo 2
+    ]
+
+    df_template = pd.DataFrame(linhas_exemplo, columns=FEATURES_DO_MODELO)
+
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         df_template.to_excel(writer, index=False)
+        
     return output.getvalue()
 
 def realizar_predicao(df,tipo = 1):
@@ -147,6 +155,7 @@ with tab_home:
     st.info("Navegue pelas abas acima para maiores informações.")
 
 with tab_resposta:
+    #drive publico com o arquivo: https://drive.google.com/drive/folders/15OClrgIKiZ2oenKGhXZyN3K2V8Fwvib8?hl=pt-br
     components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vQPfRKC71lzFbLlDdOkGSmPrFFIyHuauwmpm88f_K01yq0-uObYvNn_7dmbe25E3A/pubembed?start=false&loop=false&delayms=3000", height=560)
 
 # --- ABA: PREDIÇÃO EM LOTE ---
