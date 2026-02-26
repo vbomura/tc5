@@ -140,7 +140,7 @@ with tab_home:
                 ## Projeto Datathon (FIAP): Passos Mágicos
 
                 Com base no histórico de desenvolvimento educacional da **Associação Passos Mágicos** dos anos de 2022, 2023 e 2024, conduzimos uma profunda análise de dados para compreender a evolução dos alunos, além de compreender o passado e o presente para criar uma análise preditiva em Machine Learning. 
-                Objetivo central desta solução de identificar padrões nos indicadores que permitem alertar sobre alunos em risco antes que ocorra uma queda no desempenho ou o aumento da defasagem. 
+                O objetivo central desta solução é identificar padrões nos indicadores que permitem alertar sobre alunos em risco antes que ocorra uma queda no desempenho ou o aumento da defasagem. 
                 
                 O modelo calcula e demonstra a probabilidade de aluno(s) ou aluna(s) entrar em risco de defasagem acadêmica, o mesmo foi integrado a uma aplicação interativa construída no Streamlit. 
                 
@@ -173,7 +173,7 @@ with tab_lote:
     # Criando o link formatado para download do modelo:
     template = gerar_template_excel()
     link_html = criar_link_download(template, "modelo_passos_magicos.xlsx", "Clique aqui para baixar o modelo")    
-    st.markdown(f"Suba o arquivo preenchido ou baixe o arquivo modelo e preencha as linhas com as informações dos alunos ({link_html}).", unsafe_allow_html=True)
+    st.markdown(f"Suba o arquivo preenchido ou baixe o arquivo modelo e preencha as linhas com as informações dos alunos utilizamos as colunas de IDA, IPV, Defasagem e Fase para realizar a predição ({link_html}).", unsafe_allow_html=True)
 
     #Upload do aruqivo
     arquivo = st.file_uploader("", type=["xlsx", "csv"], key="uploader_lote")
