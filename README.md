@@ -69,7 +69,7 @@ tc5/
 │   └──Apresentação_Datathon.pptx   # Arqvuivo com as respostas das questões do Datathon
 │
 │── Base_Passos_Magicos/            # Dados disponibilizados pela Passos Mágicos
-│   └──                             # Dados disponibilizados pela Passos Mágicos
+│   └── ......                      # Dados disponibilizados pela Passos Mágicos
 │
 │── Codigos/                        # Análise exploratória, tratamento dos dados, comparações entre modelos de ML, etc
 │   └── Algoritmo V2 - NOVO.ipynb   # Análise e tratamento da base de dados utilizada
