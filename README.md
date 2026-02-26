@@ -66,7 +66,7 @@ O projeto inclui:
 tc5/
 │
 │── Apresentacao/            		    # Pasta com a apresentação em PPT do trabalho
-│   └──                             # Arqvuivo com as respostas das questões do Datathon
+│   └──Apresentação_Datathon.pptx   # Arqvuivo com as respostas das questões do Datathon
 │
 │── Base_Passos_Magicos/            # Dados disponibilizados pela Passos Mágicos
 │   └──                             # Dados disponibilizados pela Passos Mágicos
