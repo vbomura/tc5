@@ -9,23 +9,12 @@ from tools.utils import FeatureSelector, substituir_valores_coluna, remover_text
 import base64
 import streamlit.components.v1 as components
 
-# --- Configurações Globais das Features utilizadas no ML (previsao_v2.ipynb) ---
+# --- Configurações Globais  ---
+#Features utilizadas no ML (previsao_v2.ipynb)
 FEATURES_DO_MODELO = [
-            # 'ra',
-            # 'genero', 
-            # 'inde', 
-            # 'iaa', 
-            # 'ieg', 
-            # 'ips', 
             'ida', 
-            # 'mat', 
-            # 'por', 
             'ipv', 
-            # 'ian', 
             'defasagem',
-            # 'ipp',
-            # 'instituicao_de_ensino', 
-            # 'pedra', 
             'fase'
             ]
 
@@ -44,6 +33,7 @@ def gerar_template_excel():
     return output.getvalue()
 
 def realizar_predicao(df,tipo = 1):
+    #variavel tipo somente para definir se mostra ou não a limpeza de linhas nulas (somente para predição em lote)
     df = df.copy()
     modelo = carregar_modelo()
     
@@ -72,10 +62,6 @@ def criar_link_download(dados_binarios, nome_arquivo, texto_link):
     b64 = base64.b64encode(dados_binarios).decode()
     href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="{nome_arquivo}">{texto_link}</a>'
     return href
-
-# --- Interface Streamlit ---
-# st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
-# st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
 # --- Interface Streamlit ---
 st.set_page_config(page_title="Datathon FIAP (9DTAT) - Passos Mágicos", layout="wide")
@@ -132,8 +118,6 @@ tab_home, tab_lote, tab_individual, tab_resposta = st.tabs([
     "🎈 Respostas Datathon"
 ])
 
-
-# Utilizamos as informações fornecidas no Datathon da **Fase 5 - Data Analytics (FIAP - 9DTAT)**.
 # --- ABA: PÁGINA INICIAL ---
 with tab_home:
     st.markdown("""
@@ -162,8 +146,7 @@ with tab_home:
     st.info("Navegue pelas abas acima para maiores informações.")
 
 with tab_resposta:
-    # st.title('🎈 Apresentação Datathoon ')
-    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRZ9jUjldu2w7S-hEmSvFxHG-_e8a7r48GtidsWKsSBwBJk4a3yeIpFIcTGKUBNeUZOmLvmu_Ai-iBD/pubembed?start=false&loop=false&delayms=3000", height=560)
+    components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vRv4pIpW193lXDhwRmyiJj1EXi-1rXMzgu_Q9F-CHBkHtb4zGpIxjjmHcdYOjpIBQ/pubembed?start=false&loop=false&delayms=3000", height=560)
 
 # --- ABA: PREDIÇÃO EM LOTE ---
 with tab_lote:
@@ -183,7 +166,6 @@ with tab_lote:
             colunas_faltantes = set(FEATURES_DO_MODELO) - set(df_input.columns)
             if colunas_faltantes:
                 st.error(f"O arquivo enviado está faltando as seguintes colunas obrigatórias: **{', '.join(colunas_faltantes)}**")
-                # st.write(f"Por favor, carregue um arquivo válido!")
                 link_html = criar_link_download(template, "modelo_passos_magicos.xlsx", "Clique aqui para baixar o modelo")    
                 st.write(f"Por favor, carregue um arquivo válido! ({link_html}).", unsafe_allow_html=True)                
             else:
@@ -216,22 +198,6 @@ with tab_individual:
         ipv = st.number_input("IPV (Ponto de Virada)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
         defasagem = st.number_input("Defasagem", min_value=-5.0, max_value=5.0, value=0.0, step=1.0)
         fase = st.selectbox("Fase Atual", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)], key="fase_ind")
-
-        # col1, col2 = st.columns(2)
-        # with col1:
-        #     ida = st.number_input("IDA (Aprendizado)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-        #     ipv = st.number_input("IPV (Ponto de Virada)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-        #     defasagem = st.number_input("Defasagem", min_value=-5.0, max_value=5.0, value=0.0, step=1.0)
-        #     fase = st.selectbox("Fase Atual", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)], key="fase_ind")
-
-        # with col2:
-            # ian = st.number_input("IAN (Nível)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            # idade = st.number_input("Idade", min_value=0, max_value=25, value=10, step=1)
-            # inde = st.number_input("INDE", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            # ieg = st.number_input("IEG (Engajamento)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            # iaa = st.number_input("IAA (Autoavaliação)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
-            # ips = st.number_input("IPS (Social)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)            
-            # fase_ideal = st.selectbox("Fase Ideal", ["ALFA"] + [f"FASE {i}" for i in range(1, 9)], key="fase_ideal_ind")
             
         enviado = st.form_submit_button("Verificar Aluno")
         
