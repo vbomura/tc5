@@ -8,7 +8,7 @@ Utilizamos o **Machine Learning**, para criar as previsões além de analisarmos
 
 A aplicação está publicada e acessível pelo link:
 
-👉 **[https://????????????????????????????????????????????????????????????????????????????????????????????)**
+👉 **[https://datathon-n2psikjxmocweyspvzihfb.streamlit.app/]**
 
 
 ---
@@ -64,27 +64,31 @@ O projeto inclui:
 
 ```bash
 tc5/
-
+│
+│── Apresentacao/            		    # Pasta com a apresentação em PPT do trabalho
+│   └──                             # Arqvuivo com as respostas das questões do Datathon
 │
 │── Base_Passos_Magicos/            # Dados disponibilizados pela Passos Mágicos
 │   └──                             # Dados disponibilizados pela Passos Mágicos
 │
 │── Codigos/                        # Análise exploratória, tratamento dos dados, comparações entre modelos de ML, etc
 │   └── Algoritmo V2 - NOVO.ipynb   # Análise e tratamento da base de dados utilizada
+│   └── previsao_v2.ipynb           # Análise e estruturação do Machine Learning
+│   └── base_anos_limpo.xlsx        # Base tratada e salva para as análises para respostas do desafio Datathon
 │
-│── tools/                      # Arquivos para Pipeline e modelo salvo
-│   ├── DefasagemNew.joblib     # Modelo de ML utilizado no Streamlit
-│   └── utils.py                # Funções utilizadas no Streamlit
+│── tools/                          # Arquivos para Pipeline e modelo salvo
+│   ├── DefasagemNew.joblib         # Modelo de ML utilizado no Streamlit
+│   └── utils.py                    # Funções utilizadas no Streamlit
 │
-│── Respostas_Pesquisa/         # Análises e identificação das respostas do desafio do Datathon
-│   ├── Questoes_1_2.ipynb      # Tratamentos e análises para responder as questões 1 e 2 
-│   ├── Questoes_3_4.ipynb      # Tratamentos e análises para responder as questões 3 e 4
-│   ├── Questoes_5_6.ipynb      # Tratamentos e análises para responder as questões 5 e 6
-│   ├── Questoes_7_10.ipynb     # Tratamentos e análises para responder as questões 7, 8 e 10
+│── Respostas_Pesquisa/             # Análises e identificação das respostas do desafio do Datathon
+│   ├── Questoes_1_2.ipynb          # Tratamentos e análises para responder as questões 1 e 2 
+│   ├── Questoes_3_4.ipynb          # Tratamentos e análises para responder as questões 3 e 4
+│   ├── Questoes_5_6.ipynb          # Tratamentos e análises para responder as questões 5 e 6
+│   ├── Questoes_7_10.ipynb         # Tratamentos e análises para responder as questões 7, 8 e 10
 │
-│── main.py                     # Arquivo principal da aplicação Streamlit/Boas Vindas
-│── requirements.txt            # Dependências do projeto
-│── README.md                   # Documentação do repositório
+│── main.py                         # Arquivo principal da aplicação Streamlit/Boas Vindas
+│── requirements.txt                # Dependências do projeto
+│── README.md                       # Documentação do repositório
 ```
 
 # 📦 Requisitos
