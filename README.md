@@ -34,7 +34,7 @@ A interface web possui:
 
 ### ✔ **Sobre o Projeto**
 - Informações gerais  
-- Explicações sobre o modelo e a solução proposta  
+- Uma apresentação respondendo perguntas para entendimento das características do projeto
 
 ---
 
