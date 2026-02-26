@@ -2,7 +2,7 @@
 
 ## Identificação de Risco sobre desempenho de alunos
 
-Este projeto foi desenvolvido como parte do **Datathon da FIAP – Fase 5**, com foco em criar uma aplicação para predição para identificar alunos em risco antes de queda no desempenho ou aumento da defasagemos alunos.
+Este projeto foi desenvolvido como parte do **Datathon da FIAP – Fase 5**, com foco em criar uma aplicação para predição para identificar alunos em risco antes de queda no desempenho ou aumento da defasagemos.
 
 Utilizamos o **Machine Learning**, para criar as previsões além de analisarmos e respondermos algumas perguntas. A interface para a análise dos alunos está interativa em **Streamlit**.
 
