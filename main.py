@@ -10,8 +10,9 @@ import base64
 import streamlit.components.v1 as components
 
 # --- Configurações Globais  ---
-#Features utilizadas no ML (previsao_v2.ipynb)
+#Features utilizadas no ML (previsao_v2.ipynb) + RA para geração do arquivo modelo
 FEATURES_DO_MODELO = [
+            'ra',
             'ida', 
             'ipv', 
             'defasagem',
@@ -184,7 +185,7 @@ with tab_lote:
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
 
-                    st.dataframe(res)                
+                    st.dataframe(res[FEATURES_DO_MODELO + ['predicao_defasagem_aluno']])                
                 except Exception as e:
                     st.error(f"Erro ao processar arquivo: {e}")
 
