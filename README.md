@@ -17,9 +17,9 @@ A aplicação está publicada e acessível pelo link:
 
 O objetivo principal deste trabalho é:
 
-- Realizar análises gráficas e estatísticas sobre fatores relacionados ao peso
+- Realizar análises gráficas e estatísticas sobre fatores relacionados aos indices utilizados pela Associação Passos Mágicos na avaliação dos alunos
 - Construir modelos de **Machine Learning** que podem identificar padrões
-- Criar uma interface interativa em **Streamlit** para facilitar o uso por qualquer usuário
+- Criar uma interface interativa em **Streamlit** para predição sobre desempenho dos alunos
 
 O projeto engloba desde a preparação dos dados até a disponibilização online da solução.
 
