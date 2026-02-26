@@ -142,7 +142,7 @@ with tab_home:
                 Com base no histórico de desenvolvimento educacional da **Associação Passos Mágicos** dos anos de 2022, 2023 e 2024, conduzimos uma profunda análise de dados para compreender a evolução dos alunos, além de compreender o passado e o presente para criar uma análise preditiva em Machine Learning. 
                 O objetivo central desta solução é identificar padrões nos indicadores que permitem alertar sobre alunos em risco antes que ocorra uma queda no desempenho ou o aumento da defasagem. 
                 
-                O modelo calcula e demonstra a probabilidade de aluno(s) ou aluna(s) entrar em risco de defasagem acadêmica, o mesmo foi integrado a uma aplicação interativa construída no Streamlit. 
+                O modelo calcula e demonstra a probabilidade de alunos entrarem em risco de defasagem acadêmica, o mesmo foi integrado a página que está visualizando (Streamlit). 
                 
                 Essa interface intuitiva disponibiliza o modelo treinado diretamente para as equipes da Passos Mágicos, permitindo intervenções pedagógicas e psicológicas precoces e direcionadas, garantindo que nenhum aluno fique para trás.
                            
