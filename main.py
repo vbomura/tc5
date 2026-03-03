@@ -120,11 +120,12 @@ st.markdown("""
 st.title("🚀 Modelo Preditivo de Risco Educacional ")
 
 # Criando as Abas
-tab_home, tab_lote, tab_individual, tab_resposta = st.tabs([
+tab_home, tab_lote, tab_individual, tab_resposta, tab_video = st.tabs([
     "🏠 Página Inicial", 
     "📊 Análise em Lote", 
     "📝 Análise por Aluno",
-    "🎈 Respostas Datathon"
+    "🎈 Respostas Datathon",
+    "▶️ Vídeo Datathon"
 ])
 
 # --- ABA: PÁGINA INICIAL ---
@@ -142,6 +143,7 @@ with tab_home:
                 - 📊 Análise dos alunos em lote (excel);
                 - 📝 Análise do alunos Individualmente;
                 - 🎈 Respostas Perguntas Datathon; 
+                - ▶️ Vídeo com apresentação do Datathon;
                 - ℹ️ Informações do repositório principal (https://github.com/vbomura/tc5);
                                                 
                 ### 👨‍💻 Autores
@@ -157,6 +159,23 @@ with tab_home:
 with tab_resposta:
     #drive publico com o arquivo: https://drive.google.com/drive/folders/15OClrgIKiZ2oenKGhXZyN3K2V8Fwvib8?hl=pt-br
     components.iframe("https://docs.google.com/presentation/d/e/2PACX-1vQPfRKC71lzFbLlDdOkGSmPrFFIyHuauwmpm88f_K01yq0-uObYvNn_7dmbe25E3A/pubembed?start=false&loop=false&delayms=3000", height=560)
+
+with tab_video:
+    # 1. Crie o link de pré-visualização (preview)
+    preview_url = "https://drive.google.com/file/d/13Vc8i0BrCnZdHxEXN0S909LV5aomNzdi/preview"
+
+    # 2. Crie o código HTML para o iframe
+    iframe_code = f"""
+        <iframe src="{preview_url}" 
+        width="100%" 
+        height="480" 
+        allow="autoplay" 
+        style="border:none;">
+        </iframe>
+    """
+
+    # 3. Renderize o HTML no Streamlit
+    components.html(iframe_code, height=500)
 
 # --- ABA: PREDIÇÃO EM LOTE ---
 with tab_lote:
